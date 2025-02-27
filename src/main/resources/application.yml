@@ -1,0 +1,15 @@
+server:
+  port: 9000
+
+spring:
+  datasource:
+    url: jdbc:mariadb://localhost:3306/practice  # ? DB ?? ??!
+    username: root  # ? ???? ??!
+    password: mariadb  # ? ???? ??!
+    driver-class-name: org.mariadb.jdbc.Driver
+
+  mybatis:
+    mapper-locations: classpath:mapper/**/*.xml  # ? XML ?? ?? ?? ??!
+    type-aliases-package: KAKAO_API.projected.api.entity
+    configuration:
+      map-underscore-to-camel-case: true
