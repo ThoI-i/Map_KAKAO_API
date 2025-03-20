@@ -1,0 +1,34 @@
+server:
+  port: 9000  # ✅ Spring Boot 서버 포트 설정
+
+kakao:
+  client-id: "eb75beb1fefad3d0458692af0dd6617f"  # ✅ 카카오 REST API 키
+  redirect-uri: "http://localhost:9000/auth/kakao/callback"  # ✅ 리디렉트 URI
+  token-uri: "https://kauth.kakao.com/oauth/token"  # ✅ 카카오 액세스 토큰 요청 URL
+  user-info-uri: "https://kapi.kakao.com/v2/user/me"  # ✅ 카카오 사용자 정보 요청 URL
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update  # ✅ 테이블이 자동으로 생성되도록 설정
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: "eb75beb1fefad3d0458692af0dd6617f"  # ✅ OAuth2 클라이언트 ID
+            authorization-grant-type: authorization_code  # ✅ OAuth2 인증 방식
+            redirect-uri: "http://localhost:9000/auth/kakao/callback"  # ✅ OAuth2 리디렉트 URI
+            scope: profile_nickname, profile_image  # ✅ 이메일 제외하고 닉네임, 프로필 사진만 요청
+        provider:
+          kakao:
+            authorization-uri: "https://kauth.kakao.com/oauth/authorize"  # ✅ 카카오 로그인 인증 URL
+            token-uri: "https://kauth.kakao.com/oauth/token"  # ✅ 카카오 액세스 토큰 요청 URL
+            user-info-uri: "https://kapi.kakao.com/v2/user/me"  # ✅ 카카오 사용자 정보 요청 URL
+            user-name-attribute: id  # ✅ 사용자 고유 ID (카카오는 `id` 필드를 사용)
+
+  datasource:
+    url: jdbc:mariadb://localhost:3306/practice  # ✅ MariaDB 연결 정보
+    username: root  # ✅ DB 사용자명
+    password: mariadb  # ✅ DB 비밀번호
+    driver-class-name: org.mariadb.jdbc.Driver  # ✅ MariaDB 드라이버 클래스
