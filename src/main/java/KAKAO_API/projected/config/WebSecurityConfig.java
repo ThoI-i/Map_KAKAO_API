@@ -22,6 +22,7 @@ public class WebSecurityConfig {
                 .csrf().disable()  // CSRF 보호 비활성화 (POST 테스트용)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/email/**").permitAll()  // 이메일 인증 관련은 허용!
+                        .requestMatchers("/api/user/send-code").permitAll()  // ✅ 회원가입 인증코드 검증
                         .anyRequest().authenticated()  // 나머지는 인증 필요
                 );
 

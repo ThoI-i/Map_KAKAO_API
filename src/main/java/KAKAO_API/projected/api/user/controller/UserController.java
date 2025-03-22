@@ -1,4 +1,4 @@
-package KAKAO_API.projected.api.controller;
+package KAKAO_API.projected.api.user.controller;
 
 import KAKAO_API.projected.api.user.dto.RegisterRequest;
 import KAKAO_API.projected.api.user.service.UserService;
@@ -7,15 +7,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/user")
 @RequiredArgsConstructor
-@RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
-        userService.register(request);
-        return ResponseEntity.ok("회원가입 성공!");
+        try {
+            userService.register(request);
+            return ResponseEntity.ok("🎉 회원가입 성공!");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body("❌ " + e.getMessage());
+        }
     }
 }
