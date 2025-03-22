@@ -27,6 +27,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web' // 스프링 웹
 	implementation 'org.springframework.boot:spring-boot-starter-security' // Spring Security 추가
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client' // OAuth2 클라이언트 (카카오 로그인)
+	implementation 'org.springframework.boot:spring-boot-starter-mail' // 회원가입 인증번호 전송
 	implementation 'com.fasterxml.jackson.core:jackson-databind' // JSON 데이터 처리
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client' // MariaDB 사용 시

@@ -13,6 +13,17 @@ spring:
     username: root
     password: mariadb
     driver-class-name: org.mariadb.jdbc.Driver
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: memory3at@gmail.com
+    password: axyv ulvc lxdc rhmg   # ← 여기 앱 비밀번호 입력!
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
   jpa:
     hibernate:

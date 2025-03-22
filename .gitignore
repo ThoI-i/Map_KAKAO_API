@@ -22,3 +22,22 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# 💣 Java build 결과물 무시
+*.class
+/build/
+/out/
+/target/
+/bin/
+/**/build/
+/**/out/
+
+# 💣 IDE 관련 파일 무시
+.idea/
+*.iml
+
+# 💣 Gradle 캐시 무시
+.gradle/
+
+# 💙 유의사항: yml, gradle 파일은 커밋 원하니까 제외 안 함!
+# => application.yml, build.gradle 은 따로 적지 않아도 됨
