@@ -1,30 +1,27 @@
 package KAKAO_API.projected.api.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
-@NoArgsConstructor  // ✅ 기본 생성자 필요
-@AllArgsConstructor // ✅ 모든 필드를 포함한 생성자 필요
 @Entity
 @Table(name = "users")
+@Getter
+@NoArgsConstructor
 public class UserEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String nickname;  // UUID
 
-    @Column(unique = true)
-    private String kakaoId;
+    @Column(unique = true, nullable = false)
+    private String email;
 
-    private String nickname;
-    private String profileImage;
+    @Column(nullable = false)
+    private String password;
 
-    // ✅ 필요한 생성자 추가
-    public UserEntity(String kakaoId, String nickname, String profileImage) {
-        this.kakaoId = kakaoId;
+    public UserEntity(String nickname, String email, String password) {
         this.nickname = nickname;
-        this.profileImage = profileImage;
+        this.email = email;
+        this.password = password;
     }
 }

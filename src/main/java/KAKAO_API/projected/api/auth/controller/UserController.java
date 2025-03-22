@@ -1,23 +1,21 @@
-package KAKAO_API.projected.api.auth.controller;
+package KAKAO_API.projected.api.controller;
 
-import KAKAO_API.projected.api.entity.UserEntity;
-import KAKAO_API.projected.api.repository.UserRepository;
+import KAKAO_API.projected.api.dto.RegisterRequest;
+import KAKAO_API.projected.api.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/user")
+@RequiredArgsConstructor
+@RequestMapping("/api/users")
 public class UserController {
-    private final UserRepository userRepository;
 
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final UserService userService;
 
-    // ✅ 모든 유저 조회
-    @GetMapping("/all")
-    public List<UserEntity> getAllUsers() {
-        return userRepository.findAll();
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+        userService.register(request);
+        return ResponseEntity.ok("회원가입 성공!");
     }
 }

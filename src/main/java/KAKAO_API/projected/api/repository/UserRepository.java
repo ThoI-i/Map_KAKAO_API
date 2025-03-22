@@ -5,8 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<UserEntity, Long> {
-
-    // ✅ Kakao ID로 사용자 조회 (Optional 반환)
-    Optional<UserEntity> findByKakaoId(String kakaoId);
+public interface UserRepository extends JpaRepository<UserEntity, String> {
+    Optional<UserEntity> findByEmail(String email);
 }
