@@ -21,10 +21,11 @@ public class WebSecurityConfig {
         http
                 .csrf().disable()  // CSRF 보호 비활성화 (POST 테스트용)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/email/**").permitAll()  // 이메일 인증 관련은 허용!
-                        .requestMatchers("/api/user/send-code").permitAll()  // ✅ 회원가입 인증코드 전송
-                        .requestMatchers("/api/user/verify-code").permitAll()  // ✅ 인증코드 검증 후 회원가입 진행
-                        .anyRequest().authenticated()  // 나머지는 인증 필요
+                        .requestMatchers("/api/email/**").permitAll()  // ✅이메일 인증 허용!
+                        .requestMatchers("/api/user/send-code").permitAll()  // ✅회원가입 인증코드 전송 허용
+                        .requestMatchers("/api/user/verify-code").permitAll()  // ✅인증코드 검증 회원가입 진행 허용
+                        .requestMatchers("/api/login").permitAll()  // ✅로그인 진행 허용
+                        .anyRequest().authenticated()  // 나머지는 인증 필ㅏ요
                 );
 
         return http.build();
