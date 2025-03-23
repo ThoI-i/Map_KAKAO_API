@@ -15,13 +15,16 @@ public class LoginService {
     private final PasswordEncoder passwordEncoder;
 
     public void login(LoginRequest request) {
-        UserEntity user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("❌ 해당 이메일은 존재하지 않습니다."));
+        String input = request.getEmailOrNickname();
+        UserEntity user = userRepository.findByEmail(input)
+                .or(() -> userRepository.findByNickname(input))
+                .orElseThrow(() -> new RuntimeException("❌ 이메일 또는 닉네임이 잘못되었습니다."));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("❌ 비밀번호가 일치하지 않습니다.");
         }
 
-        // 👇 추후 여기에 토큰 발급 추가할 예정!
+        // 로그인 성공 처리 (토큰 발급 예정)
     }
+
 }
