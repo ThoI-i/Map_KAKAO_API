@@ -1,5 +1,6 @@
 package KAKAO_API.projected.api.user.service;
 
+import KAKAO_API.projected.api.email.service.EmailService;
 import KAKAO_API.projected.api.user.dto.RegisterRequest;
 import KAKAO_API.projected.api.user.entity.UserEntity;
 import KAKAO_API.projected.api.user.repository.UserRepository;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -17,40 +17,41 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
-    // 이메일 인증 통과 여부 저장용 (임시 메모리 구조)
-    private final Map<String, Boolean> verifiedEmails = new HashMap<>();
+    // 회원가입 요청 임시 저장 (이메일 → RegisterRequest)
+    private final Map<String, RegisterRequest> pendingSignup = new HashMap<>();
 
-    public void markEmailVerified(String email) {
-        verifiedEmails.put(email, true);
-    }
-
-    public boolean isEmailVerified(String email) {
-        return verifiedEmails.getOrDefault(email, false);
-    }
-
-    public void register(RegisterRequest request) {
+    // 1단계 - 이메일 인증 요청 + 정보 임시 저장
+    public void requestSignup(RegisterRequest request) {
         String email = request.getEmail();
-        String password = request.getPassword();
+        String nickname = request.getNickname();
 
-        // 1. 이메일 인증 확인
-        if (!isEmailVerified(email)) {
-            throw new RuntimeException("이메일 인증이 완료되지 않았습니다.");
+        if (userRepository.existsByEmail(email)) {
+            throw new RuntimeException("이미 등록된 이메일입니다.");
+        }
+        if (userRepository.existsByNickname(nickname)) {
+            throw new RuntimeException("이미 사용 중인 닉네임입니다.");
         }
 
-        // 2. 이메일 중복 체크
-        if (userRepository.findByEmail(email).isPresent()) {
-            throw new RuntimeException("이미 존재하는 이메일입니다.");
+        emailService.sendCode(email); // ✉️ 인증코드 전송
+        pendingSignup.put(email, request); // 임시 저장
+    }
+
+    // 2단계 - 인증코드 검증 후 가입 확정
+    public void verifyAndRegister(String email, String code) {
+        if (!emailService.verifyCode(email, code)) {
+            throw new RuntimeException("인증 코드가 일치하지 않습니다.");
         }
 
-        // 3. 닉네임은 UUID로 생성
-        String nickname = UUID.randomUUID().toString();
+        RegisterRequest request = pendingSignup.get(email);
+        if (request == null) {
+            throw new RuntimeException("가입 요청 정보가 없습니다.");
+        }
 
-        // 4. 비밀번호 암호화
-        String encodedPassword = passwordEncoder.encode(password);
-
-        // 5. DB 저장
-        UserEntity user = new UserEntity(nickname, email, encodedPassword);
+        String encodedPw = passwordEncoder.encode(request.getPassword());
+        UserEntity user = new UserEntity(request.getNickname(), email, encodedPw);
         userRepository.save(user);
+        pendingSignup.remove(email);
     }
 }

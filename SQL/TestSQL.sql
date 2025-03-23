@@ -1,12 +1,13 @@
-CREATE TABLE space_log (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,  -- Long 타입 PK (자동 증가)
-    space VARCHAR(255) NOT NULL, -- 저장된 장소
-    time VARCHAR(50) NOT NULL    -- 저장된 시간
+CREATE TABLE users (
+    nickname CHAR(36) PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL
 );
 
+INSERT INTO users (nickname, email, password)
+VALUES ('Admin', 'ojw1912@gmail.com', 'adminadmin');
 
-INSERT INTO space_log (id, space, time) 
-VALUES (1, '스타벅스 강남점', NOW());
+DELETE FROM users
+WHERE nickname = 'memoryEat_Master';
 
-
-SELECT * FROM space_log;
+SELECT * FROM users;

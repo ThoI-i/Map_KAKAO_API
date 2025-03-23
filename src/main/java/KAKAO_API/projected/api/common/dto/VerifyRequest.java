@@ -1,4 +1,4 @@
-package KAKAO_API.projected.api.email.dto;
+package KAKAO_API.projected.api.common.dto;
 
 import lombok.Getter;
 

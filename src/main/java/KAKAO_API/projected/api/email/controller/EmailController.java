@@ -1,6 +1,6 @@
 package KAKAO_API.projected.api.email.controller;
 
-import KAKAO_API.projected.api.email.dto.VerifyRequest;
+import KAKAO_API.projected.api.common.dto.VerifyRequest;
 import KAKAO_API.projected.api.email.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
