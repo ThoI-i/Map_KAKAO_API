@@ -8,11 +8,16 @@ kakao:
   user-info-uri: "https://kapi.kakao.com/v2/user/me"
 
 spring:
+  redis:
+    host: localhost # 🟡 Redis 서버 위치 (현재는 내 PC)
+    port: 6379      # 🔵 Redis 기본 포트
+
   datasource:
     url: jdbc:mariadb://localhost:3306/practice
     username: root
     password: mariadb
     driver-class-name: org.mariadb.jdbc.Driver
+
   mail:
     host: smtp.gmail.com
     port: 587
@@ -32,3 +37,5 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+
