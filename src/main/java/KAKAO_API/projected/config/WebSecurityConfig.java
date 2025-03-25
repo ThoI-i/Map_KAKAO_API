@@ -25,7 +25,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/user/send-code").permitAll()  // ✅회원가입 인증코드 전송 허용
                         .requestMatchers("/api/user/verify-code").permitAll()  // ✅인증코드 검증 회원가입 진행 허용
                         .requestMatchers("/api/login").permitAll()  // ✅로그인 진행 허용
-                        .anyRequest().authenticated()  // 나머지는 인증 필ㅏ요
+                        .anyRequest().authenticated()  // 나머지는 인증 필요
                 );
 
         return http.build();
