@@ -72,9 +72,9 @@ public class JwtTokenProvider {
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
-                    .setSigningKey(key) // 🔄 Key 객체 사용
+                    .setSigningKey(key) // 🔄 Key 객체 사용: SecretKey 검증
                     .build()
-                    .parseClaimsJws(token);
+                    .parseClaimsJws(token); // TTL(유효시간 검사함)
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             return false;

@@ -22,6 +22,9 @@ public class TokenController {
     // ✅ 토큰 재발급 API (쿠키 기반)
     @PostMapping("/refresh")
     public ResponseEntity<TokenResponse> refresh(HttpServletRequest request, HttpServletResponse response) {
+        // HttpServlet : 통신 규칙 처리자(클라이언트 ↔ 서버의 연결다리 역할)
+        // request  : [클라이언트 → 서버] 쿠키, 파라미터, 헤더 "정보 요청"
+        // response : [서버 → 클라이언트] 쿠키, 파라미터, 헤더 "정보 응답"
 
         // ✅ 1. 쿠키에서 refresh_token 추출
         String refreshToken = null;
@@ -40,17 +43,31 @@ public class TokenController {
         }
 
         // ✅ 2. 토큰 유효성 검사
-        if (!jwtTokenProvider.validateToken(refreshToken)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // ❌ 만료 or 위조
+        if (!jwtTokenProvider.validateToken(refreshToken)) { // ❌ 위조:.setSigningKey | 만료: .parseClaimsJws
+
+            Cookie expired = new Cookie("refresh_token", null);
+            expired.setMaxAge(0);          // ⏱ Max-Age(TTL) 0초 → 즉시 삭제
+            expired.setHttpOnly(true);     // JS 접근금지(보안)
+            expired.setSecure(true);       // HTTPS에서만 전송
+            expired.setPath("/");          // 모든 경로에서 일치 시 삭제
+            response.addCookie(expired);   // 브라우저에게 쿠키 삭제 명령 전달
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         // ✅ 3. 사용자 ID 추출
         String userId = jwtTokenProvider.getUserIdFromToken(refreshToken);
 
-        // ✅ 4. Redis에서 저장된 RefreshToken과 비교
+        // ✅ 4. Redis에 저장된 RefreshToken과 비교 → Redis에 없는 RefreshToken 삭제
         String savedRefreshToken = redisTokenService.getRefreshToken(userId);
-        if (!refreshToken.equals(savedRefreshToken)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // ❌ 위조 or 탈취
+        if (!refreshToken.equals(savedRefreshToken)) { // ❌ 위조/탈취
+
+            Cookie expired = new Cookie("refresh_token", null);
+            expired.setMaxAge(0);          // ⏱ Max-Age(TTL) 0초 → 즉시 삭제
+            expired.setHttpOnly(true);     // JS 접근금지(보안)
+            expired.setSecure(true);       // HTTPS에서만 전송
+            expired.setPath("/");          // 모든 경로에서 일치 시 삭제
+            response.addCookie(expired);   // 브라우저에게 쿠키 삭제 명령 전달
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         // ✅ 5. AccessToken 새로 발급
