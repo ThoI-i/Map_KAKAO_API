@@ -46,11 +46,7 @@ public class TokenController {
         if (!jwtTokenProvider.validateToken(refreshToken)) { // ❌ 위조:.setSigningKey | 만료: .parseClaimsJws
 
             Cookie expired = new Cookie("refresh_token", null);
-            expired.setMaxAge(0);          // ⏱ Max-Age(TTL) 0초 → 즉시 삭제
-            expired.setHttpOnly(true);     // JS 접근금지(보안)
-            expired.setSecure(true);       // HTTPS에서만 전송
-            expired.setPath("/");          // 모든 경로에서 일치 시 삭제
-            response.addCookie(expired);   // 브라우저에게 쿠키 삭제 명령 전달
+            clearRefreshTokenCookie(response); // ❌ 위조/만료 쿠키 삭제 메서드 호출
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
@@ -60,13 +56,8 @@ public class TokenController {
         // ✅ 4. Redis에 저장된 RefreshToken과 비교 → Redis에 없는 RefreshToken 삭제
         String savedRefreshToken = redisTokenService.getRefreshToken(userId);
         if (!refreshToken.equals(savedRefreshToken)) { // ❌ 위조/탈취
+            clearRefreshTokenCookie(response); // ❌ 위조/만료 쿠키 삭제 메서드 호출
 
-            Cookie expired = new Cookie("refresh_token", null);
-            expired.setMaxAge(0);          // ⏱ Max-Age(TTL) 0초 → 즉시 삭제
-            expired.setHttpOnly(true);     // JS 접근금지(보안)
-            expired.setSecure(true);       // HTTPS에서만 전송
-            expired.setPath("/");          // 모든 경로에서 일치 시 삭제
-            response.addCookie(expired);   // 브라우저에게 쿠키 삭제 명령 전달
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
@@ -93,5 +84,15 @@ public class TokenController {
 
         // ✅ 7. 응답으로 AccessToken만 반환
         return ResponseEntity.ok(new TokenResponse(newAccessToken, newRefreshToken));
+    }
+
+    // ❌ 위조/만료 쿠키 삭제 메서드
+    private void clearRefreshTokenCookie(HttpServletResponse response) {
+        Cookie expired = new Cookie("refresh_token", null);
+        expired.setMaxAge(0);          // ⏱ Max-Age(TTL) 0초 → 즉시 삭제
+        expired.setHttpOnly(true);     // JS 접근금지(보안)
+        expired.setSecure(true);       // HTTPS에서만 전송
+        expired.setPath("/");          // 모든 경로에서 일치 시 삭제
+        response.addCookie(expired);   // 브라우저에게 쿠키 삭제 명령 전달
     }
 }
