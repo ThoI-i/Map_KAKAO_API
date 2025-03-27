@@ -25,9 +25,15 @@ public class JwtTokenProvider {
     private final long REFRESH_TOKEN_EXPIRY = 1000 * 60 * 60 * 24; // 24시간
 
     // ✅ Access Token 생성
-    public String createAccessToken(String userId) {
+    public String createAccessToken(String nickName) {
+//        토큰에 다수의 정보 전달 필요 시
+//  public String createAccessToken(String nickname, String email, String role) {
+//        Claims claims = Jwts.claims().setSubject(nickname); // nickname 주체(유지)
+//        claims.put("email", email);                         // 이메일 추가
+//        claims.put("role", role);                           // 권한 정보 추가
+
         return Jwts.builder()
-                .setSubject(userId)
+                .setSubject(nickName)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRY))
                 .signWith(key, SignatureAlgorithm.HS256) // 🔄 변경됨: signWith(String) → signWith(Key, Algo)

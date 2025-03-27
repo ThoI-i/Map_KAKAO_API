@@ -31,6 +31,10 @@ public class LoginService {
 
         // ✅ 토큰 생성
         String accessToken = jwtTokenProvider.createAccessToken(user.getNickname().toString());
+        //String accessToken = jwtTokenProvider.createAccessToken(user.getNickname().toString()
+        //                                                        ,user.getEmail().toString()
+        //                                                        ,user.getRole().toString());
+        // VO(Value Object) 사용 시, .toString() 반환 타입을 명시 필요
         String refreshToken = jwtTokenProvider.createRefreshToken();
 
         // ✅ Redis 저장
