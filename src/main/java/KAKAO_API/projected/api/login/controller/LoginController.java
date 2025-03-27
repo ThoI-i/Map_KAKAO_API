@@ -16,8 +16,27 @@ public class LoginController {
 
     private final LoginService loginService;
 
-    @PostMapping
-    public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletResponse response) {
+@PostMapping
+public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletResponse response) {
+    // JSON.Stringify() JS → JSON 변환 후 백엔드 전송
+    // @RequestBody: JSON을 가로채 ★Jackson 라이브러리(Spring Boot) 파싱 시작(JSON → POJO) ↔ 역직렬화(Serialize)
+    // = POJO(Plain Old Java Object ~ 순수한 자바 객체) → Jackson이 Reflection API(JDK)로 클래스 구조 분석
+    // → 기본 생성자 호출(@NoArgsConstructor) + 각 필드 값 직접 주입(Reflection API) = POJO 완성
+    // ※@JsonProperty 사용 시 Jackson이 AnnotationIntrospector 메서드로 어노테이션 분석 후
+    // ★★JSON KEY = DTO 필드와 매칭시켜줌
+
+    // EX)
+    // { // JSON
+    //  "email": "gmail.com", // "email" = KEY | "gmail.com" = VALUE
+    //  "password": "1234"
+    //}
+
+    // RequestDTO
+    // public class LoginRequest {
+    //    @JsonProperty("email")  // ← "email"이라는 JSON 키 =
+    //    private String emailOrNickname; // ←  = POJO 필드
+    // }
+
         try {
             LoginResponse tokenResponse = loginService.login(request);
 

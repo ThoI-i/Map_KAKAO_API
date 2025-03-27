@@ -1,9 +1,10 @@
 package KAKAO_API.projected.api.login.dto.response;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+//@Data // getter, setter, Tosting, NoArgs, AllArgs 포함 @Data 금지
+@Getter
 @AllArgsConstructor
 public class LoginResponse {
     private String message;
