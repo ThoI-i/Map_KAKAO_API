@@ -19,7 +19,7 @@ public class TokenController {
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisTokenService redisTokenService;
 
-    // ✅ 토큰 재발급 API (쿠키 기반)
+    // ✅ Refresh Token 재발급 API (쿠키 기반)
     @PostMapping("/refresh")
     public ResponseEntity<TokenResponse> refresh(HttpServletRequest request, HttpServletResponse response) {
         // HttpServlet : 통신 규칙 처리자(클라이언트 ↔ 서버의 연결다리 역할)

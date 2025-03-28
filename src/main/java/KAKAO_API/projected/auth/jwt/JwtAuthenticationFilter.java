@@ -18,6 +18,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    // ✅ Access Token 검증 (인증 필터)
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
@@ -26,6 +27,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
+        // Access Token 검증
         // 1️⃣ Authorization 헤더에서 토큰 추출
         String bearer = request.getHeader("Authorization");
         if (StringUtils.hasText(bearer) && bearer.startsWith("Bearer ")) {

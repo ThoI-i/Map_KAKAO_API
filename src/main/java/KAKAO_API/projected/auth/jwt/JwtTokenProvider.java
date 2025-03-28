@@ -9,7 +9,7 @@ import java.security.Key;
 import java.util.Date;
 
 @Component
-public class JwtTokenProvider {
+public class JwtTokenProvider { //🧬 JWT 유틸 서비스
 
     // ✅ 기존 secretKey를 문자열로 두지 않고 Key 객체로 처리
     private final String secretKey = "JWT_MASTER_SECRET_123456789012345678901234"; // 최소 32바이트 이상 필수!
