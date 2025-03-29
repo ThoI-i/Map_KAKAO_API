@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/token")
-public class TokenController {
+public class RefreshTokensController {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisTokenService redisTokenService;
