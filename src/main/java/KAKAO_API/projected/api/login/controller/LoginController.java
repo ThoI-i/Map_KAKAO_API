@@ -43,7 +43,8 @@ public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletRes
             // ✅ 1. RefreshToken을 쿠키에 담는다
             Cookie refreshCookie = new Cookie("refresh_token", tokenResponse.getRefreshToken());
             refreshCookie.setHttpOnly(true);          // JS 접근 차단
-            refreshCookie.setSecure(true);            // HTTPS 환경에서만 전송
+//            refreshCookie.setSecure(true);           // 해당 쿠키 HTTPS 환경만 전송
+            refreshCookie.setSecure(false);            // 해당 쿠키 HTTP 허용 → 개발 환경
             refreshCookie.setPath("/");               // 모든 요청에 대해 전송됨
             refreshCookie.setMaxAge(60 * 60 * 24);    // 24시간 유효
 
