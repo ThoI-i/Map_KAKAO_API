@@ -7,10 +7,12 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/token")
@@ -38,6 +40,8 @@ public class RefreshTokensController {
             }
         }
 
+        log.info("Cookie전달 받음 refresh : {}", refreshToken);
+
         if (refreshToken == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // ❌ 쿠키 없을 시 Error 발생
         }
@@ -51,10 +55,13 @@ public class RefreshTokensController {
         }
 
         // ✅ 3. 사용자 ID 추출
-        String userId = jwtTokenProvider.getUserIdFromToken(refreshToken);
+        String nickName = jwtTokenProvider.getUserIdFromToken(refreshToken);
+        log.info("쿠키의 refreshToken: {}", refreshToken);
 
         // ✅ 4. Redis에 저장된 RefreshToken과 비교 → Redis에 없는 RefreshToken 삭제
-        String savedRefreshToken = redisTokenService.getRefreshToken(userId);
+        String savedRefreshToken = redisTokenService.getRefreshToken(nickName);
+        log.info("Redis에 저장된 refreshToken: {}", savedRefreshToken);
+
         if (!refreshToken.equals(savedRefreshToken)) { // ❌ 위조/탈취
             clearRefreshTokenCookie(response); // ❌ 위조/만료 쿠키 삭제 메서드 호출
 
@@ -62,16 +69,16 @@ public class RefreshTokensController {
         }
 
         // ✅ 5. AccessToken 새로 발급
-        String newAccessToken = jwtTokenProvider.createAccessToken(userId);
+        String newAccessToken = jwtTokenProvider.createAccessToken(nickName);
 
         // ✅ 6. 조건부 RefreshToken 재발급 (3시간 지났으면)
-        long lastSavedTime = redisTokenService.getLastSavedTime(userId);
+        long lastSavedTime = redisTokenService.getLastSavedTime(nickName);
         long now = System.currentTimeMillis();
         String newRefreshToken = refreshToken;
 
         if (now - lastSavedTime >= 3 * 60 * 60 * 1000) {
-            newRefreshToken = jwtTokenProvider.createRefreshToken();
-            redisTokenService.saveRefreshToken(userId, newRefreshToken);
+            newRefreshToken = jwtTokenProvider.createRefreshToken(nickName);
+            redisTokenService.saveRefreshToken(nickName, newRefreshToken);
 
             // ✅ RefreshToken 재발급 시 쿠키도 갱신
             Cookie refreshCookie = new Cookie("refresh_token", newRefreshToken);

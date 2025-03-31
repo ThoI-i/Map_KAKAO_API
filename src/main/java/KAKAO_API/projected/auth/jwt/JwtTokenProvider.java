@@ -2,12 +2,14 @@ package KAKAO_API.projected.auth.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
+@Slf4j
 @Component
 public class JwtTokenProvider { //🧬 JWT 유틸 서비스
 
@@ -41,8 +43,9 @@ public class JwtTokenProvider { //🧬 JWT 유틸 서비스
     }
 
     // ✅ Refresh Token 생성
-    public String createRefreshToken() {
+    public String createRefreshToken(String nickName) {
         return Jwts.builder()
+                .setSubject(nickName)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRY))
                 .signWith(key, SignatureAlgorithm.HS256) // 🔄 동일하게 Key 객체 사용
@@ -51,12 +54,14 @@ public class JwtTokenProvider { //🧬 JWT 유틸 서비스
 
     // ✅ userId 추출
     public String getUserIdFromToken(String token) {
-        return Jwts.parserBuilder() // 🔄 기존 parser() deprecated → parserBuilder()로 변경
+        Claims claims =  Jwts.parserBuilder() // 🔄 기존 parser() deprecated → parserBuilder()로 변경
                 .setSigningKey(key) // 🔄 문자열 대신 Key 사용
                 .build()
                 .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+                .getBody();
+
+        log.info("JWT에서 추출된 USERID: {}", claims.getSubject());
+        return claims.getSubject();
     }
 
     // ✅ 만료 여부 확인

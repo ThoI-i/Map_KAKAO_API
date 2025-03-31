@@ -7,9 +7,11 @@ import KAKAO_API.projected.api.user.repository.UserRepository;
 import KAKAO_API.projected.auth.jwt.JwtTokenProvider;
 import KAKAO_API.projected.auth.jwt.RedisTokenService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LoginService {
@@ -35,11 +37,11 @@ String accessToken = jwtTokenProvider.createAccessToken(user.getNickname().toStr
 //                                                        ,user.getEmail().toString()
 //                                                        ,user.getRole().toString());
 // VO(Value Object) 사용 시, .toString() 반환 타입을 명시 필요
-        String refreshToken = jwtTokenProvider.createRefreshToken();
+        String refreshToken = jwtTokenProvider.createRefreshToken(user.getNickname().toString());
 
         // ✅ Redis 저장
         redisTokenService.saveRefreshToken(user.getNickname().toString(), refreshToken);
-
+        log.info("Redis refresh : {}", refreshToken);
         return new LoginResponse("🎉 로그인 성공!", accessToken, refreshToken);
     }
 }
