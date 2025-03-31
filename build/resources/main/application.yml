@@ -8,9 +8,10 @@ kakao:
   user-info-uri: "https://kapi.kakao.com/v2/user/me"
 
 spring:
-  redis:
-    host: localhost # 🟡 Redis 서버 위치 (현재는 내 PC)
-    port: 6379      # 🔵 Redis 기본 포트
+  data:
+    redis:
+      host: localhost # 🟡 Redis 서버 위치 (현재는 내 PC)
+      port: 6379      # 🔵 Redis 기본 포트
 
   datasource:
     url: jdbc:mariadb://localhost:3306/practice
