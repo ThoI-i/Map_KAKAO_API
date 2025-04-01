@@ -10,11 +10,11 @@ kakao:
 spring:
   data:
     redis:
-      host: redis.memoryeat.com # 🟡 Redis 서버 위치 (현재는 내 PC)
+      host: redis.localhost.com # 🟡 Redis 서버 위치 (현재는 내 PC)
       port: 6379      # 🔵 Redis 기본 포트
 
   datasource:
-    url: jdbc:mariadb://memoryeat.com:3306/practice
+    url: jdbc:mariadb://localhost.com:3306/practice
     username: root
     password: mariadb
     driver-class-name: org.mariadb.jdbc.Driver

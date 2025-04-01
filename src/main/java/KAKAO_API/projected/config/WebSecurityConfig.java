@@ -30,7 +30,7 @@ public class WebSecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         // ⭐ Access Token 재생성 = Access Token X = /api/token/refresh 허용해줘야함
-                        .requestMatchers("/api/login", "/api/email/**", "/api/token/refresh").permitAll()
+                        .requestMatchers("/api/login", "/api/email/**", "/api/user/**", "/api/token/refresh").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
