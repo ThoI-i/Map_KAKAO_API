@@ -26,6 +26,7 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web' // 스프링 웹
 	implementation 'org.springframework.boot:spring-boot-starter-security' // Spring Security 추가
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis' // Redis 설치
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client' // OAuth2 클라이언트 (카카오 로그인)
 	implementation 'org.springframework.boot:spring-boot-starter-mail' // 회원가입 인증번호 전송
 	implementation 'com.fasterxml.jackson.core:jackson-databind' // JSON 데이터 처리
@@ -52,9 +53,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // ✅ JPA 관련 라이브러리 추가
 	// 데이터베이스 라이브러리 - 모든 DB 공통
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-
-	// MyBatis 라이브러리
-	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
 
 	// 마리아디비 커넥터 - 사용할 DB 전용
 	implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.8'
