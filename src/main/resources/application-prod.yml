@@ -10,14 +10,22 @@ kakao:
 spring:
   data:
     redis:
-      host: localhost # 🟡 Redis 서버 위치 (현재는 내 PC)
+      host: redis.memoryeat.com # 🟡 Redis 서버 위치 (현재는 내 PC)
       port: 6379      # 🔵 Redis 기본 포트
 
   datasource:
-    url: jdbc:mariadb://localhost:3306/practice
+    url: jdbc:mariadb://memoryeat.com:3306/practice
     username: root
     password: mariadb
     driver-class-name: org.mariadb.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
 
   mail:
     host: smtp.gmail.com
@@ -31,12 +39,7 @@ spring:
           starttls:
             enable: true
 
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-
-
+  cors:
+    allowed-origins:
+      - https://memoryeat.com
+      - https://www.memoryeat.com
